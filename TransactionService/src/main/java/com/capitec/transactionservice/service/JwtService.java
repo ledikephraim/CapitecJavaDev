@@ -1,4 +1,4 @@
-package com.capitec.auth.service;
+package com.capitec.transactionservice.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -14,32 +14,11 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
-
     /**
      * Returns the signing key derived from the configured secret.
      */
     public SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
-    }
-
-    /**
-     * Generates a JWT token for the given username and roles.
-     */
-    public String generateToken(UUID userId, String username, Set<String> roles) {
-        SecretKey key = getSecretKey();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", roles);
-        claims.put("userId", userId.toString());
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
     }
 
     /**
