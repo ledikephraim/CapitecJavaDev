@@ -29,11 +29,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+        if ( authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if(request.getRequestURI().contains("swagger")
+                    || request.getRequestURI().contains("/.well-known")
+                    || request.getRequestURI().contains("/api-docs")
+                    || request.getRequestURI().contains("/favicon.ico")) {
+                filterChain.doFilter(request, response);
+                return;
+
+            }
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
-
+        System.out.println(request.getRequestURI());
         final String jwt = authHeader.substring(7);
         String username;
 
@@ -49,10 +58,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Only set authentication if not already set
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            // Parse claims directly from JWT
             var claims = io.jsonwebtoken.Jwts.parserBuilder()
                     .setSigningKey(jwtService.getSecretKey())
                     .build()
