@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,15 +44,38 @@ public class AuthController {
         userRepository.save(user);
         return "User registered successfully.";
     }
-
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestParam String username, @RequestParam String password) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        User user = userRepository.findByUsername(username).orElseThrow();
-        Set<String> roles = user.getRoles().stream()
-                .map(UserRole::getRoleName)
-                .collect(Collectors.toSet());
-        String token = jwtService.generateToken(username, roles);
-        return Map.of("token", token, "roles", roles);
+    public ResponseEntity<?> login(@RequestParam String username,
+                                   @RequestParam String password) {
+
+        try {
+            // Authenticate using AuthenticationManager
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+
+            // Load user roles from DB
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            Set<String> roles = user.getRoles()
+                    .stream()
+                    .map(UserRole::getRoleName)
+                    .collect(Collectors.toSet());
+
+            // Generate JWT token
+            String token = jwtService.generateToken(username, roles);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("roles", roles);
+
+            return ResponseEntity.ok(response);
+
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("Authentication failed: " + ex.getMessage());
+        }
     }
 }
