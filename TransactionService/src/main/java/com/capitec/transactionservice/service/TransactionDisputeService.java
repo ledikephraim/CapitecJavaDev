@@ -50,13 +50,13 @@ public class TransactionDisputeService {
         Dispute saved = disputeRepository.save(dispute);
 
         // Create event record
-//        createEvent(saved, "CREATED", Map.of(
-//                "reason", reasonCode,
-//                "status", status.getCode()
-//        ));
+        createEvent(saved, "CREATED", Map.of(
+                "reason", reasonCode,
+                "status", status.getCode()
+        ));
 
-        // Emit Kafka event
-//        kafkaTemplate.send(TOPIC_DISPUTE_CREATED, saved);
+//         Emit Kafka event
+        kafkaTemplate.send(TOPIC_DISPUTE_CREATED, saved);
 
         return saved;
     }
@@ -77,11 +77,11 @@ public class TransactionDisputeService {
 
         Dispute updated = disputeRepository.save(dispute);
 
-//        createEvent(updated, "UPDATED", Map.of(
-//                "new_status", newStatusCode
-//        ));
+        createEvent(updated, "STATUS_UPDATED", Map.of(
+                "new_status", newStatusCode
+        ));
 
-//        kafkaTemplate.send(TOPIC_DISPUTE_UPDATED, updated);
+        kafkaTemplate.send(TOPIC_DISPUTE_UPDATED, updated);
 
         return updated;
     }
@@ -96,19 +96,19 @@ public class TransactionDisputeService {
     /**
      * Internal method to write an event record.
      */
-//    private void createEvent(Dispute dispute, String eventTypeCode, Map<String, Object> eventData) {
-//        DisputeEventType eventType = disputeEventTypeRepository.findById(eventTypeCode)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid event type: " + eventTypeCode));
-//
-//        DisputeEvent event = DisputeEvent.builder()
-//                .dispute(dispute)
-//                .eventType(eventType)
-//                .eventData(eventData) // Map works directly now
-//                .createdAt(LocalDateTime.now())
-//                .build();
-//
-//        disputeEventRepository.save(event);
-//    }
+    private void createEvent(Dispute dispute, String eventTypeCode, Map<String, String> eventData) {
+        DisputeEventType eventType = disputeEventTypeRepository.findById(eventTypeCode)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid event type: " + eventTypeCode));
+
+        DisputeEvent event = DisputeEvent.builder()
+                .dispute(dispute)
+                .eventType(eventType)
+                .eventData(eventData.get(eventTypeCode))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        disputeEventRepository.save(event);
+    }
 
 }
 
