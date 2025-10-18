@@ -36,7 +36,7 @@ public class AuthController {
                 .build();
 
         UserRole userRole = UserRole.builder()
-                .roleName(role.equalsIgnoreCase("admin") ? "ROLE_DISPUTE_ADMIN" : "ROLE_CUSTOMER")
+                .roleName(role.equalsIgnoreCase("admin") ? "DISPUTE_ADMIN" : "CUSTOMER")
                 .user(user)
                 .build();
 

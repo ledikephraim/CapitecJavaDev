@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS capitecbank.authentication.users (
 CREATE TABLE IF NOT EXISTS capitecbank.authentication.user_roles (
     id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES capitecbank.authentication.users(id) ON DELETE CASCADE,
-    role_name VARCHAR(50) NOT NULL CHECK (role_name IN ('ROLE_DISPUTE_ADMIN', 'ROLE_CUSTOMER'))
+    role_name VARCHAR(50) NOT NULL CHECK (role_name IN ('DISPUTE_ADMIN', 'CUSTOMER'))
 );
 
 INSERT INTO capitecbank.authentication.users (username, password, email)
@@ -21,6 +21,6 @@ VALUES
     ('customer', 'password1', 'customer@domain.tld');
 
 INSERT INTO capitecbank.authentication.user_roles (user_id, role_name)
-SELECT id, 'ROLE_DISPUTE_ADMIN' FROM capitecbank.authentication.users WHERE username='admin';
+SELECT id, 'DISPUTE_ADMIN' FROM capitecbank.authentication.users WHERE username='admin';
 INSERT INTO capitecbank.authentication.user_roles (user_id, role_name)
-SELECT id, 'ROLE_CUSTOMER' FROM capitecbank.authentication.users WHERE username='customer';
+SELECT id, 'CUSTOMER' FROM capitecbank.authentication.users WHERE username='customer';
