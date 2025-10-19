@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "transaction_types", schema = "transactions")
+@Table(name = "transaction_types")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +15,6 @@ public class TransactionType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "type_name", nullable = false, unique = true)
+    @Column(name = "type_name", length = 50, unique = true, nullable = false)
     private String typeName;
 }

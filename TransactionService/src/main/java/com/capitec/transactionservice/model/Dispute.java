@@ -1,3 +1,4 @@
+// Dispute.java
 package com.capitec.transactionservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -5,11 +6,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "disputes", schema = "transactions")
+@Table(name = "disputes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,7 @@ import java.util.UUID;
 public class Dispute {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,4 +46,7 @@ public class Dispute {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
+
+
+// Transaction.java
 

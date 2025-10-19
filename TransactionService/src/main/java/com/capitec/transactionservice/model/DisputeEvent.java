@@ -2,43 +2,44 @@ package com.capitec.transactionservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import org.hibernate.annotations.Type;
-//import org.hibernate.annotations.TypeDef;
-
 @Entity
-@Table(name = "dispute_events", schema = "capitecbank.transactions")
-@Getter
+@Table(name = "dispute_events")
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class DisputeEvent {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dispute_id", nullable = false)
     private Dispute dispute;
 
-    @ManyToOne
-    @JoinColumn(name = "event_type", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "event_type_code", referencedColumnName = "code", nullable = false)
     private DisputeEventType eventType;
 
-//    @Type(type = "jsonb") // <-- now works
-//    @Column(name = "event_data", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "event_data", columnDefinition = "jsonb")
-//    private Map<String, Object> eventData;
-    private String eventData;
+    private Map<String, Object> eventData;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }

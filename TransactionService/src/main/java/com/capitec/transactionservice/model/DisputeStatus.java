@@ -4,17 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "dispute_status_lookup", schema = "transactions")
+@Table(name = "dispute_status_lookup")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DisputeStatus {
+
     @Id
-    @Column(length = 20)
+    @Column(name = "code", length = 20)
     private String code;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 }
-
