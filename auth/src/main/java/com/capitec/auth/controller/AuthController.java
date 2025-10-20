@@ -1,5 +1,7 @@
 package com.capitec.auth.controller;
 
+import com.capitec.auth.dto.UserLoginRequestDTO;
+import com.capitec.auth.dto.UserRegistrationRequestDTO;
 import com.capitec.auth.model.*;
 import com.capitec.auth.repository.UserRepository;
 import com.capitec.auth.service.JwtService;
@@ -9,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,19 +25,16 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public String register(@RequestParam String username,
-                           @RequestParam String email,
-                           @RequestParam String password,
-                           @RequestParam(defaultValue = "customer") String role) {
+    public String register(@RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
         User user = User.builder()
-                .username(username)
-                .password(encoder.encode(password))
-                .email(email)
+                .username(userRegistrationRequestDTO.getUsername())
+                .password(encoder.encode(userRegistrationRequestDTO.getPassword()))
+                .email(userRegistrationRequestDTO.getEmail())
                 .enabled(true)
                 .build();
 
         UserRole userRole = UserRole.builder()
-                .roleName(role.equalsIgnoreCase("admin") ? "DISPUTE_ADMIN" : "CUSTOMER")
+                .roleName(userRegistrationRequestDTO.getRole().equalsIgnoreCase("admin") ? "DISPUTE_ADMIN" : "CUSTOMER")
                 .user(user)
                 .build();
 
@@ -45,17 +43,16 @@ public class AuthController {
         return "User registered successfully.";
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username,
-                                   @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody UserLoginRequestDTO userLoginRequestDTO) {
 
         try {
             // Authenticate using AuthenticationManager
             authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+                    new UsernamePasswordAuthenticationToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword())
             );
 
             // Load user roles from DB
-            User user = userRepository.findByUsername(username)
+            User user = userRepository.findByUsername(userLoginRequestDTO.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             Set<String> roles = user.getRoles()
@@ -64,7 +61,7 @@ public class AuthController {
                     .collect(Collectors.toSet());
 
             // Generate JWT token
-            String token = jwtService.generateToken(user.getId(),username, roles);
+            String token = jwtService.generateToken(user.getId(),userLoginRequestDTO.getUsername(), roles);
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
