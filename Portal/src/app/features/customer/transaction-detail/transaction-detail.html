@@ -1,0 +1,130 @@
+<div class="page-container">
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="error-message alert" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && transaction">
+    <div class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back to Transactions
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="transaction-icon" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <div class="header-info">
+          <!-- <h1>{{ transaction.merchantName || transaction.description }}</h1> -->
+          <h1>{{ transaction.transactionType?.typeName }}</h1>
+          <p>{{ transaction.createdAt | date: 'EEEE, MMMM d, y · h:mm a' }}</p>
+        </div>
+      </div>
+
+      <div class="amount-section">
+        <div class="amount-label">Amount</div>
+        <div class="amount-value" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'" [class.credit]="transaction.transactionType?.typeName === 'CREDIT'">
+          {{ transaction.transactionType?.typeName === 'DEBIT' ? '-' : '+' }}{{ transaction.currency }} {{ transaction.amount | number:'1.2-2' }}
+        </div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <div class="detail-label">Transaction ID</div>
+          <div class="detail-value">{{ transaction.id }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Type</div>
+          <div class="detail-value">
+            <span class="badge" [class.badge-error]="transaction.transactionType?.typeName === 'DEBIT'" [class.badge-success]="transaction.transactionType?.typeName === 'CREDIT'">
+              {{ transaction.type }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Status</div>
+          <div class="detail-value">
+            <!-- <span class="badge" [ngClass]="getStatusClass(transaction.status)"> -->
+            <span class="badge" [ngClass]="getStatusClass('completed')">
+              {{ transaction.status }}
+            </span>
+          </div>
+        </div>
+
+        <!-- <div class="detail-item" *ngIf="transaction.category">
+          <div class="detail-label">Category</div>
+          <div class="detail-value">{{ transaction.category }}</div>
+        </div> -->
+
+        <div class="detail-item">
+          <div class="detail-label">Currency</div>
+          <div class="detail-value">{{ transaction.currency }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Created At</div>
+          <div class="detail-value">{{ transaction.createdAt | date: 'short' }}</div>
+        </div>
+      </div>
+
+      <div class="dispute-section" *ngIf="!transactionDispute">
+        <button class="btn btn-primary" (click)="toggleDisputeForm()" *ngIf="!showDisputeForm">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          Dispute This Transaction
+        </button>
+
+        <div class="dispute-form-container" *ngIf="showDisputeForm">
+          <h3>Submit a Dispute</h3>
+          <p>Please select a reason for disputing this transaction:</p>
+
+          <form [formGroup]="disputeForm" (ngSubmit)="submitDispute()">
+            <div class="form-group">
+              <label>Reason for Dispute</label>
+              <select formControlName="reasonCode" class="form-control">
+                <option value="">Select a reason</option>
+                <option *ngFor="let reason of disputeReasons" [value]="reason.code">
+                  {{ reason.description }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" (click)="toggleDisputeForm()">Cancel</button>
+              <button type="submit" class="btn btn-accent" [disabled]="disputeForm.invalid || submittingDispute">
+                <span *ngIf="!submittingDispute">Submit Dispute</span>
+                <span *ngIf="submittingDispute">Submitting...</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="disputed-alert" *ngIf="transactionDispute">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div>
+          <strong>This transaction is disputed</strong>
+          <p>A dispute has been submitted for this transaction and is being reviewed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

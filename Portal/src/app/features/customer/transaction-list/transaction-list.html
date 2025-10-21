@@ -1,0 +1,60 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>My Transactions</h1>
+    <p>View and manage your transaction history {{transactions.length}}</p>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="error-message alert" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="transactions-grid" *ngIf="!loading && !error">
+
+      <div class="transaction-card" *ngFor="let transaction of transactions" (click)="viewDetails(transaction.id)">
+        <div class="transaction-header">
+          <div class="merchant">
+            <div class="merchant-icon" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+            </div>
+            <div>
+              <!-- <div class="merchant-name">{{ transaction.merchantName || transaction.description }}</div> -->
+              <div class="transaction-date">{{ transaction.createdAt | date: 'MMM d, y · h:mm a' }}</div>
+            </div>
+          </div>
+          <div class="transaction-amount" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'"
+            [class.credit]="transaction.transactionType?.typeName === 'CREDIT'">
+            <span class="amount">{{ transaction.transactionType?.typeName === 'DEBIT' ? '-' : '+' }}{{
+              transaction.currency }} {{
+              transaction.amount | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="transaction-footer">
+          <!-- <span class="badge" [ngClass]="getStatusClass(transaction.status)"> -->
+          <span class="badge" [ngClass]="getStatusClass('completed')">
+            <!-- {{ transaction.status }} -->
+            completed
+          </span>
+          <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+
+    <div class="empty-state" *ngIf="transactions.length === 0">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+        <line x1="1" y1="10" x2="23" y2="10"></line>
+      </svg>
+      <h3>No transactions found</h3>
+      <p>Your transactions will appear here once you make a purchase</p>
+    </div>
+  </div>
+</div>

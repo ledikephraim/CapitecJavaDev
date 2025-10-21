@@ -1,0 +1,260 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-lg;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $secondary;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: $spacing-lg;
+  transition: all $transition-fast;
+
+  svg {
+    stroke-width: 2;
+  }
+
+  &:hover {
+    gap: $spacing-sm;
+    color: darken($secondary, 10%);
+  }
+}
+
+.detail-card {
+  background: white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+}
+
+.detail-header {
+  background: linear-gradient(135deg, $primary, $secondary);
+  padding: $spacing-xl;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  color: white;
+}
+
+.transaction-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-lg;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    color: white;
+    stroke-width: 2;
+  }
+
+  &.debit {
+    background: rgba(239, 68, 68, 0.2);
+  }
+}
+
+.header-info {
+  flex: 1;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    opacity: 0.9;
+    font-size: 0.938rem;
+  }
+}
+
+.amount-section {
+  padding: $spacing-xl;
+  text-align: center;
+  background: $neutral-light;
+  border-bottom: 1px solid lighten($neutral, 45%);
+}
+
+.amount-label {
+  font-size: 0.875rem;
+  color: $neutral;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: $spacing-xs;
+}
+
+.amount-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: $success;
+
+  &.debit {
+    color: $error;
+  }
+
+  &.credit {
+    color: $success;
+  }
+}
+
+.details-grid {
+  padding: $spacing-xl;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-lg;
+}
+
+.detail-item {
+  .detail-label {
+    font-size: 0.875rem;
+    color: $neutral;
+    font-weight: 500;
+    margin-bottom: $spacing-xs;
+  }
+
+  .detail-value {
+    font-size: 1rem;
+    color: $neutral-dark;
+    font-weight: 600;
+  }
+}
+
+.dispute-section {
+  padding: $spacing-xl;
+  border-top: 1px solid lighten($neutral, 45%);
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.dispute-form-container {
+  animation: slideDown 0.3s ease-out;
+
+  h3 {
+    font-size: 1.25rem;
+    color: $primary;
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    color: $neutral;
+    margin-bottom: $spacing-lg;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: $spacing-sm;
+    border: 2px solid lighten($neutral, 30%);
+    border-radius: $radius-md;
+    font-size: $font-size-base;
+    transition: border-color $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $secondary;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+
+  .btn {
+    flex: 1;
+  }
+}
+
+.disputed-alert {
+  padding: $spacing-lg;
+  background: lighten($accent, 40%);
+  border-left: 4px solid $accent;
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-start;
+
+  svg {
+    color: $accent;
+    stroke-width: 2;
+    flex-shrink: 0;
+  }
+
+  strong {
+    display: block;
+    color: darken($accent, 10%);
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    color: darken($accent, 15%);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+.status-completed {
+  background: lighten($success, 40%);
+  color: darken($success, 10%);
+}
+
+.status-pending {
+  background: lighten($warning, 40%);
+  color: darken($warning, 10%);
+}
+
+.status-disputed {
+  background: lighten($accent, 40%);
+  color: darken($accent, 10%);
+}
+
+.status-reversed {
+  background: lighten($neutral, 45%);
+  color: $neutral-dark;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: $spacing-md;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .amount-value {
+    font-size: 2rem;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
