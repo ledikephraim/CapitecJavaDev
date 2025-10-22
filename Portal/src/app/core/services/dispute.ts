@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Dispute } from '../models/dipute.model';
+import { Dispute, DisputeEvent } from '../models/dipute.model';
 import { environment } from '../../../environments/environment';
 
 
@@ -60,12 +60,12 @@ export class DisputeService {
   /**
    * Get all events for a specific dispute
    */
-  // getDisputeEvents(disputeId: string): Observable<DisputeEvent[]> {
-  //   return this.http.get<DisputeEvent[]>(`${this.apiUrl}/${disputeId}/events`)
-  //     .pipe(
-  //       catchError(this.handleError)
-  //     );
-  // }
+  getDisputeEvents(disputeId: string): Observable<DisputeEvent[]> {
+    return this.http.get<DisputeEvent[]>(`${environment.transactionsAPIBaseUrl}/disputes/event/${disputeId}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   /**
    * Add comment to dispute

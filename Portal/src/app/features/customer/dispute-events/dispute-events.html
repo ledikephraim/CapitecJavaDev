@@ -1,1 +1,66 @@
-<p>dispute-events works!</p>
+<div class="page-container">
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="error-message alert" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && dispute">
+    <div class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back to Transaction
+    </div>
+
+    <div class="dispute-header-card">
+      <div class="dispute-info">
+        <h1>Dispute Event Log</h1>
+        <!-- <p>Transaction: {{ dispute.transaction.merchantName || dispute.transaction.description }}</p> -->
+        <!-- <p>Transaction: {{  dispute.transaction.description }}</p> -->
+      </div>
+      <div class="dispute-status">
+        <span class="badge" [ngClass]="getStatusClass(dispute.status.code)">
+          {{ dispute.status.description }}
+        </span>
+      </div>
+    </div>
+
+    <div class="timeline-container">
+      <div class="timeline-item" *ngFor="let event of events; let i = index">
+        <div class="timeline-marker">
+          <div class="marker-dot" [class.first]="i === events.length - 1"></div>
+          <div class="marker-line" *ngIf="i < events.length - 1"></div>
+        </div>
+
+        <div class="timeline-content">
+          <div class="event-header">
+            <div class="event-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" *ngIf="event.eventType.code === 'CREATED'"></circle>
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" *ngIf="event.eventType.code === 'STATUS_UPDATED'"></path>
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" *ngIf="event.eventType.code === 'COMMENT_ADDED'"></path>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" *ngIf="event.eventType.code === 'ATTACHMENT_UPLOADED'"></path>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" *ngIf="event.eventType.code === 'CLOSED'"></path>
+              </svg>
+            </div>
+            <div class="event-details">
+              <h3>{{ event.eventType.description }}</h3>
+              <span class="event-time">{{ event.createdAt | date: 'MMM d, y · h:mm a' }}</span>
+            </div>
+          </div>
+
+          <div class="event-data" *ngIf="event.eventData">
+            <pre>{{ event.eventData }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-end" *ngIf="events.length === 0">
+        <p>No events recorded yet</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -106,6 +106,16 @@ export class TransactionDetail implements OnInit {
   getStatusClass(status: string): string {
     return `status-${status.toLowerCase()}`;
   }
+ viewDisputeDetails(transaction:Transaction, dispute: Dispute): void {
+
+  dispute.transaction = transaction;
+  this.router.navigate(
+    ['/disputes', dispute.id, 'events'],
+    { state: { dispute  } }
+  );
+  
+  // this.router.navigate(['/disputes', id, 'events']);
+}
 
   goBack(): void {
     this.router.navigate(['/transactions']);

@@ -29,11 +29,11 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard(['CUSTOMER'])],
     loadComponent: () => import('./features/customer/transaction-detail/transaction-detail').then(m => m.TransactionDetail)
   },
-//   {
-//     path: 'disputes/:id/events',
-//     canActivate: [authGuard, roleGuard(['CUSTOMER'])],
-//     loadComponent: () => import('./features/customer/dispute-events/dispute-events.component').then(m => m.DisputeEventsComponent)
-//   },
+  {
+    path: 'disputes/:id/events',
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])],
+    loadComponent: () => import('./features/customer/dispute-events/dispute-events').then(m => m.DisputeEvents)
+  },
 //   {
 //     path: 'admin/disputes',
 //     canActivate: [authGuard, roleGuard(['DISPUTE_ADMIN'])],

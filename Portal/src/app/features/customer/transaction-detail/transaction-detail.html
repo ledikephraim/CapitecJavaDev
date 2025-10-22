@@ -32,8 +32,10 @@
 
       <div class="amount-section">
         <div class="amount-label">Amount</div>
-        <div class="amount-value" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'" [class.credit]="transaction.transactionType?.typeName === 'CREDIT'">
-          {{ transaction.transactionType?.typeName === 'DEBIT' ? '-' : '+' }}{{ transaction.currency }} {{ transaction.amount | number:'1.2-2' }}
+        <div class="amount-value" [class.debit]="transaction.transactionType?.typeName === 'DEBIT'"
+          [class.credit]="transaction.transactionType?.typeName === 'CREDIT'">
+          {{ transaction.transactionType?.typeName === 'DEBIT' ? '-' : '+' }}{{ transaction.currency }} {{
+          transaction.amount | number:'1.2-2' }}
         </div>
       </div>
 
@@ -46,7 +48,8 @@
         <div class="detail-item">
           <div class="detail-label">Type</div>
           <div class="detail-value">
-            <span class="badge" [class.badge-error]="transaction.transactionType?.typeName === 'DEBIT'" [class.badge-success]="transaction.transactionType?.typeName === 'CREDIT'">
+            <span class="badge" [class.badge-error]="transaction.transactionType?.typeName === 'DEBIT'"
+              [class.badge-success]="transaction.transactionType?.typeName === 'CREDIT'">
               {{ transaction.type }}
             </span>
           </div>
@@ -124,6 +127,13 @@
           <strong>This transaction is disputed</strong>
           <p>A dispute has been submitted for this transaction and is being reviewed.</p>
         </div>
+        <button class="btn" (click)="viewDisputeDetails(transaction,transactionDispute)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          View Dispute Details
+        </button>
       </div>
     </div>
   </div>
