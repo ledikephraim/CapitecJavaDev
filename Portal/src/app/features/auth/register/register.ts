@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  
+
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,6 +27,7 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
+      role: ['CUSTOMER', Validators.required],
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
@@ -40,7 +41,17 @@ export class RegisterComponent {
     return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : { 'mismatch': true };
   }
-
+  setRole(role: 'CUSTOMER' | 'DISPUTE_ADMIN'): void {
+    this.registerForm.patchValue({ role });
+  }
+  getRoleDescription(): string {
+    const role = this.registerForm.get('role')?.value;
+    if (role === 'CUSTOMER') {
+      return 'Access your transactions, and manage disputes.';
+    } else {
+      return 'Manage customer disputes, process transactions, and provide support.';
+    }
+  }
   onSubmit(): void {
     if (this.registerForm.invalid) return;
 
@@ -51,9 +62,10 @@ export class RegisterComponent {
 
     this.authService.register(registerData).subscribe({
       next: () => {
-        // this.router.navigate(['/transactions']);
+        this.router.navigate(['/login']);
       },
       error: (err) => {
+        console.error('Registration error:', err);
         this.error = err.error?.message || 'Registration failed. Please try again.';
         this.loading = false;
       }

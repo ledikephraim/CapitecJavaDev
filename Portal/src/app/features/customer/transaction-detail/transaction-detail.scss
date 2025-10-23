@@ -191,8 +191,8 @@
 
 .disputed-alert {
   padding: $spacing-lg;
-  background: lighten($accent, 40%);
-  border-left: 4px solid $accent;
+  background: lighten($quaternary, 40%);
+  border-left: 4px solid $quaternary;
   display: flex;
   gap: $spacing-md;
   align-items: flex-start;
@@ -205,12 +205,12 @@
 
   strong {
     display: block;
-    color: darken($accent, 10%);
+    color: darken($quaternary, 10%);
     margin-bottom: $spacing-xs;
   }
 
   p {
-    color: darken($accent, 15%);
+    color: darken($quaternary, 15%);
     font-size: 0.875rem;
     margin: 0;
   }

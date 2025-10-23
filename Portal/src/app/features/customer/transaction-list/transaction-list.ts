@@ -12,6 +12,7 @@ import { Transaction } from '../../../core/models/transaction.model';
   styleUrls: ['./transaction-list.scss']
 })
 export class TransactionList implements OnInit {
+
   transactions: Transaction[] = [];
   loading = true;
   error = '';
@@ -19,17 +20,32 @@ export class TransactionList implements OnInit {
   constructor(
     private transactionService: TransactionService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTransactions();
+  }
+  generateARandomTransactionForCurrentUser() {
+    this.loading = true;
+
+    this.transactionService.generateRandonTransactionForUser().subscribe({
+      next: (data) => {
+        this.transactions.push(data);
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to generate transaction';
+        this.loading = false;
+      }
+    });
+
   }
 
   loadTransactions(): void {
     this.loading = true;
     this.transactionService.getTransactions().subscribe({
       next: (data) => {
-        
+
         this.transactions = [...data];
         console.log('Fetched transactions:', this.transactions);
 

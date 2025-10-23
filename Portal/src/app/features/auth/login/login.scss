@@ -95,7 +95,7 @@
   }
 
   input {
-    width: 100%;
+    width: 90%;
     padding: 0.875rem 1rem;
     border: 2px solid lighten($neutral, 35%);
     border-radius: 0.75rem;
@@ -133,9 +133,9 @@
 .password-field {
   position: relative;
 
-  input {
-    padding-right: 3rem;
-  }
+  // input {
+  //   padding-right: 3rem;
+  // }
 
   .toggle-password {
     position: absolute;

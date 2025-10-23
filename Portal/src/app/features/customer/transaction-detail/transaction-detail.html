@@ -83,11 +83,6 @@
 
       <div class="dispute-section" *ngIf="!transactionDispute">
         <button class="btn btn-primary" (click)="toggleDisputeForm()" *ngIf="!showDisputeForm">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
           Dispute This Transaction
         </button>
 
@@ -107,8 +102,8 @@
             </div>
 
             <div class="form-actions">
-              <button type="button" class="btn btn-outline" (click)="toggleDisputeForm()">Cancel</button>
-              <button type="submit" class="btn btn-accent" [disabled]="disputeForm.invalid || submittingDispute">
+              <button type="button" class="btn btn-tertiary" (click)="toggleDisputeForm()">Cancel</button>
+              <button type="submit" class="btn btn-quaternary" [disabled]="disputeForm.invalid || submittingDispute">
                 <span *ngIf="!submittingDispute">Submit Dispute</span>
                 <span *ngIf="submittingDispute">Submitting...</span>
               </button>
@@ -117,21 +112,12 @@
         </div>
       </div>
 
-      <div class="disputed-alert" *ngIf="transactionDispute">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <div>
+      <div *ngIf="transactionDispute">
+      <div class="disputed-alert">
           <strong>This transaction is disputed</strong>
           <p>A dispute has been submitted for this transaction and is being reviewed.</p>
-        </div>
-        <button class="btn" (click)="viewDisputeDetails(transaction,transactionDispute)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
+      </div>
+        <button class="btn btn-tertiary" (click)="viewDisputeDetails(transaction,transactionDispute)">
           View Dispute Details
         </button>
       </div>

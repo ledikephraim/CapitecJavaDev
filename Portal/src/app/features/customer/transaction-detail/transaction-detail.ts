@@ -101,6 +101,18 @@ export class TransactionDetail implements OnInit {
       transactionId: this.transaction.id,
       reasonCode: this.disputeForm.value.reasonCode
     };
+    this.transactionService.submitDispute(request).subscribe({
+      next: (dispute) => {
+        this.transactionDispute = dispute;
+        this.submittingDispute = false;
+        this.showDisputeForm = false;
+      },
+      error: (err) => {
+        console.error('Dispute submission failed:', err);
+        this.error = 'Failed to submit dispute';
+        this.submittingDispute = false;
+      }
+    });
   }
 
   getStatusClass(status: string): string {

@@ -43,8 +43,7 @@ export class AuthService {
    * Register new user
    */
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(tap(response => this.handleAuthResponse(response)));
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data);
   }
 
   /**

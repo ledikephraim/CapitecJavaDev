@@ -1,9 +1,6 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
-// import { authGuard } from './core/guards/auth.guard';
-// import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -27,12 +24,14 @@ export const routes: Routes = [
   {
     path: 'transactions/:id',
     canActivate: [authGuard, roleGuard(['CUSTOMER'])],
-    loadComponent: () => import('./features/customer/transaction-detail/transaction-detail').then(m => m.TransactionDetail)
+    loadComponent: () => import('./features/customer/transaction-detail/transaction-detail').then(m => m.TransactionDetail),
+    data: { prerender: false }
   },
   {
     path: 'disputes/:id/events',
     canActivate: [authGuard, roleGuard(['CUSTOMER'])],
-    loadComponent: () => import('./features/customer/dispute-events/dispute-events').then(m => m.DisputeEvents)
+    loadComponent: () => import('./features/customer/dispute-events/dispute-events').then(m => m.DisputeEvents),
+    data: { prerender: false }
   },
 //   {
 //     path: 'admin/disputes',

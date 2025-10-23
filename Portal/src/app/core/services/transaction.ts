@@ -4,17 +4,27 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Transaction } from '../models/transaction.model';
 import { environment } from '../../../environments/environment';
+import { Dispute } from '../models/dipute.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
-  
 
   private apiUrl = `${environment.transactionsAPIBaseUrl}/transactions`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
+
+  /**
+  * Generate a random transaction for current user
+  */
+  generateRandonTransactionForUser(): Observable<Transaction> {
+    return this.http.post<Transaction>(`${this.apiUrl}/generate`, {})
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
   /**
    * Get all transactions for current user
    */
@@ -47,6 +57,12 @@ export class TransactionService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+  /**
+ * Submit a transaction dispute
+ */
+  submitDispute(request: { transactionId: string; reasonCode: any; }) {
+    return this.http.post<Dispute>(`${environment.transactionsAPIBaseUrl}/disputes`, request)
   }
 
   /**
@@ -203,7 +219,7 @@ export class TransactionService {
     transactions.forEach(transaction => {
       const date = new Date(transaction.transactionDate);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
+
       if (!grouped.has(monthKey)) {
         grouped.set(monthKey, []);
       }
@@ -256,7 +272,7 @@ export class TransactionService {
     // 1. Status is COMPLETED
     // 2. Not already disputed
     // 3. Within dispute window (e.g., 60 days)
-    
+
     if (transaction.status === 'DISPUTED' || transaction.status === 'REVERSED') {
       return false;
     }
@@ -264,7 +280,7 @@ export class TransactionService {
     const transactionDate = new Date(transaction.transactionDate);
     const now = new Date();
     const daysDifference = Math.floor((now.getTime() - transactionDate.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     // Allow disputes within 60 days
     return daysDifference <= 60;
   }
@@ -284,9 +300,9 @@ export class TransactionService {
    */
   private handleError(error: any): Observable<never> {
     console.error('Transaction Service Error:', error);
-    
+
     let errorMessage = 'An error occurred while processing your request.';
-    
+
     if (error.error?.message) {
       errorMessage = error.error.message;
     } else if (error.status === 0) {
