@@ -113,10 +113,12 @@
       </div>
 
       <div *ngIf="transactionDispute">
-      <div class="disputed-alert">
+        <div class="disputed-alert">
           <strong>This transaction is disputed</strong>
-          <p>A dispute has been submitted for this transaction and is being reviewed.</p>
-      </div>
+          <p><strong>Reason </strong>{{transactionDispute.reason.description}}</p>
+          <p><strong>Status </strong>{{transactionDispute.status.description}}</p>
+
+        </div>
         <button class="btn btn-tertiary" (click)="viewDisputeDetails(transaction,transactionDispute)">
           View Dispute Details
         </button>

@@ -1,1 +1,85 @@
-<p>dispute-management works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Dispute Management</h1>
+      <p>Review and manage transaction disputes</p>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <button 
+      *ngFor="let filter of filters"
+      class="filter-btn"
+      [class.active]="selectedFilter === filter.value"
+      (click)="selectFilter(filter.value)"
+    >
+      <span class="filter-label">{{ filter.label }}</span>
+      <span class="filter-count">{{ filter.count }}</span>
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="error-message alert" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="disputes-grid" *ngIf="!loading && !error">
+    <div 
+      class="dispute-card"
+      *ngFor="let dispute of filteredDisputes"
+      (click)="viewDispute(dispute)"
+    >
+      <div class="card-header">
+        <!-- <div class="dispute-priority" [ngClass]="getPriorityClass(dispute.transaction.amount)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+          </svg>
+        </div> -->
+        <span class="badge" [ngClass]="getStatusClass(dispute.status.code)">
+          {{ dispute.status.description }}
+        </span>
+      </div>
+
+      <div class="dispute-info">
+        <!-- <h3>{{ dispute.transaction.description }}</h3> -->
+        <p class="dispute-reason">{{ dispute.reason.description }}</p>
+      </div>
+
+      <div class="dispute-details">
+        <!-- <div class="detail-row">
+          <span class="label">Amount:</span>
+          <span class="value amount">{{ dispute.transaction.currency }} {{ dispute.transaction.amount | number:'1.2-2' }}</span>
+        </div> -->
+        <div class="detail-row">
+          <span class="label">Submitted:</span>
+          <span class="value">{{ dispute.createdAt | date: 'MMM d, y' }}</span>
+        </div>
+        <!-- <div class="detail-row">
+          <span class="label">Transaction ID:</span>
+          <span class="value">{{ dispute.transaction.transactionId }}</span>
+        </div> -->
+      </div>
+
+      <div class="card-footer">
+        <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredDisputes.length === 0">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+      <h3>No disputes found</h3>
+      <p>There are no {{ selectedFilter.toLowerCase() }} disputes at the moment</p>
+    </div>
+  </div>
+</div>

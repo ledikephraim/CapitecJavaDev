@@ -1,1 +1,140 @@
-<p>dispute-detail works!</p>
+<div class="page-container">
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="error-message alert" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && dispute">
+    
+    <div class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back to Disputes
+    </div>
+
+    <div class="content-grid">
+      <!-- Left Column: Dispute Details -->
+      <div class="main-column">
+        <div class="detail-card">
+          <div class="card-section">
+            <h2>Dispute Information</h2>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">Status</span>
+                <span class="badge" [ngClass]="getStatusClass(dispute.status.code)">
+                  {{ dispute.status.description }}
+                </span>
+              </div>
+              <div class="info-item">
+                <span class="label">Reason</span>
+                <span class="value">{{ dispute.reason.description }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Created</span>
+                <span class="value">{{ dispute.createdAt | date: 'MMM d, y · h:mm a' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Last Updated</span>
+                <span class="value">{{ dispute.updatedAt | date: 'MMM d, y · h:mm a' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-section">
+            <h2>Transaction Details</h2>
+            <div class="transaction-summary">
+              <div class="transaction-header">
+                <div class="merchant-info">
+                  <!-- <h3>{{ dispute.transaction.merchantName || dispute.transaction.description }}</h3> -->
+                  <!-- <p>{{ dispute.transaction.transactionDate | date: 'EEEE, MMMM d, y' }}</p> -->
+                </div>
+                <div class="amount-display">
+                  <!-- {{ dispute.transaction.currency }} {{ dispute.transaction.amount | number:'1.2-2' }} -->
+                </div>
+              </div>
+              <div class="transaction-meta">
+                <div class="meta-item">
+                  <span class="label">Transaction ID</span>
+                  <!-- <span class="value">{{ dispute.transaction.transactionId }}</span> -->
+                </div>
+                <div class="meta-item">
+                  <span class="label">Type</span>
+                  <!-- <span class="value">{{ dispute.transaction.type }}</span> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-section">
+            <h2>Event Timeline</h2>
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let event of events">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                  <div class="event-title">{{ event.eventType.description }}</div>
+                  <div class="event-time">{{ event.createdAt | date: 'MMM d, y · h:mm a' }}</div>
+                  <div class="event-data" *ngIf="event.eventData">
+                    <pre>{{ event.eventData | json}}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Actions -->
+      <div class="sidebar-column">
+        <div class="action-card">
+          <h2>Update Status</h2>
+          <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
+            <div class="form-group">
+              <label for="statusCode">Change Dispute Status</label>
+              <select id="statusCode" formControlName="statusCode" class="form-control">
+                <option *ngFor="let status of availableStatuses" [value]="status.code">
+                  {{ status.description }}
+                </option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" [disabled]="updating || statusForm.invalid">
+              <span *ngIf="!updating">Update Status</span>
+              <span *ngIf="updating">Updating...</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="info-card">
+          <h3>Customer Information</h3>
+          <div class="customer-info">
+            <div class="customer-avatar">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="customer-details">
+              <div class="customer-id">User ID: {{ dispute.userId }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <h3>Quick Stats</h3>
+          <div class="stat-item">
+            <span class="stat-label">Events</span>
+            <span class="stat-value">{{ events.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Days Open</span>
+            <span class="stat-value">{{ getDaysOpen() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

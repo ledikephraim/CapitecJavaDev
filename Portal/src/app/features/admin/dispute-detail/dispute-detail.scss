@@ -1,0 +1,342 @@
+/* src/app/features/admin/dispute-detail/dispute-detail.component.scss */
+@import '../../../../styles/variables';
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-lg;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $secondary;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: $spacing-lg;
+  transition: all $transition-fast;
+
+  svg {
+    stroke-width: 2;
+  }
+
+  &:hover {
+    gap: $spacing-sm;
+    color: darken($secondary, 10%);
+  }
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: $spacing-xl;
+}
+
+.detail-card,
+.action-card,
+.info-card,
+.stats-card {
+  background: white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+}
+
+.card-section {
+  padding: $spacing-xl;
+  border-bottom: 1px solid lighten($neutral, 45%);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $primary;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  .label {
+    font-size: 0.75rem;
+    color: $neutral;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .value {
+    font-size: 1rem;
+    color: $neutral-dark;
+    font-weight: 500;
+  }
+}
+
+.transaction-summary {
+  background: $neutral-light;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid lighten($neutral, 40%);
+}
+
+.merchant-info {
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $neutral-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: $neutral;
+  }
+}
+
+.amount-display {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $error;
+}
+
+.transaction-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .label {
+    font-size: 0.75rem;
+    color: $neutral;
+    font-weight: 600;
+  }
+
+  .value {
+    font-size: 0.875rem;
+    color: $neutral-dark;
+  }
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.timeline-item {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: $secondary;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex: 1;
+
+  .event-title {
+    font-weight: 600;
+    color: $neutral-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  .event-time {
+    font-size: 0.875rem;
+    color: $neutral;
+    margin-bottom: $spacing-xs;
+  }
+
+  .event-data {
+    background: lighten($neutral, 48%);
+    padding: $spacing-sm;
+    border-radius: $radius-sm;
+    margin-top: $spacing-xs;
+
+    pre {
+      margin: 0;
+      font-size: 0.813rem;
+      color: $neutral-dark;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
+.action-card,
+.info-card,
+.stats-card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+
+  h2, h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $primary;
+    margin-bottom: $spacing-md;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: $spacing-sm;
+  border: 2px solid lighten($neutral, 30%);
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $secondary;
+  }
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: $spacing-md;
+  justify-content: center;
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.customer-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $secondary, $primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    color: white;
+    stroke-width: 2;
+  }
+}
+
+.customer-details {
+  flex: 1;
+
+  .customer-id {
+    font-size: 0.875rem;
+    color: $neutral;
+  }
+}
+
+.stats-card {
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm 0;
+    border-bottom: 1px solid lighten($neutral, 45%);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: $neutral;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+}
+
+.status-pending {
+  background: lighten($warning, 40%);
+  color: darken($warning, 10%);
+}
+
+.status-under_review {
+  background: lighten($info, 40%);
+  color: darken($info, 10%);
+}
+
+.status-resolved {
+  background: lighten($success, 40%);
+  color: darken($success, 10%);
+}
+
+.status-rejected {
+  background: lighten($error, 40%);
+  color: darken($error, 10%);
+}
+
+.status-cancelled {
+  background: lighten($neutral, 45%);
+  color: $neutral-dark;
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-column {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: $spacing-md;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-header {
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  .amount-display {
+    align-self: flex-start;
+  }
+
+  .transaction-meta {
+    grid-template-columns: 1fr;
+  }
+}

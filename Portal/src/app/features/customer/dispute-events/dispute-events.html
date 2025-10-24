@@ -53,7 +53,7 @@
           </div>
 
           <div class="event-data" *ngIf="event.eventData">
-            <pre>{{ event.eventData }}</pre>
+            <pre>{{ event.eventData | json}}</pre>
           </div>
         </div>
       </div>

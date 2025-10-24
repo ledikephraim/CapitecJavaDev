@@ -33,16 +33,18 @@ export const routes: Routes = [
     loadComponent: () => import('./features/customer/dispute-events/dispute-events').then(m => m.DisputeEvents),
     data: { prerender: false }
   },
-//   {
-//     path: 'admin/disputes',
-//     canActivate: [authGuard, roleGuard(['DISPUTE_ADMIN'])],
-//     loadComponent: () => import('./features/admin/dispute-management/dispute-management.component').then(m => m.DisputeManagementComponent)
-//   },
-//   {
-//     path: 'admin/disputes/:id',
-//     canActivate: [authGuard, roleGuard(['DISPUTE_ADMIN'])],
-//     loadComponent: () => import('./features/admin/dispute-detail/dispute-detail.component').then(m => m.DisputeDetailComponent)
-//   },
+  {
+    path: 'admin/disputes',
+    canActivate: [authGuard, roleGuard(['DISPUTE_ADMIN'])],
+    loadComponent: () => import('./features/admin/dispute-management/dispute-management').then(m => m.DisputeManagement),
+    data: { prerender: false }
+  },
+  {
+    path: 'admin/disputes/:id',
+    canActivate: [authGuard, roleGuard(['DISPUTE_ADMIN'])],
+    loadComponent: () => import('./features/admin/dispute-detail/dispute-detail').then(m => m.DisputeDetail),
+    // data: { prerender: false }
+  },
 //   {
 //     path: 'unauthorized',
 //     loadComponent: () => import('./shared/components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)

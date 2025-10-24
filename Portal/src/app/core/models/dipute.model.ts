@@ -1,4 +1,5 @@
 // src/app/core/models/dispute.model.ts
+import { Pageable } from './pageable.model';
 import { Transaction } from './transaction.model';
 
 /**
@@ -17,6 +18,15 @@ export interface Dispute {
   assignedTo?: string;
   priority?: DisputePriority;
   resolutionNotes?: string;
+}
+
+export interface PagedDisputes {
+  content: Dispute[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
 }
 
 /**

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Dispute, DisputeEvent } from '../models/dipute.model';
+import { Dispute, DisputeEvent, PagedDisputes, UpdateDisputeStatusRequest } from '../models/dipute.model';
 import { environment } from '../../../environments/environment';
 
 
@@ -105,14 +105,14 @@ export class DisputeService {
   /**
    * Get all disputes (admin only)
    */
-  getAllDisputes(status?: string, page?: number, size?: number): Observable<Dispute[]> {
+  getAllDisputes(status?: string, page?: number, size?: number): Observable<PagedDisputes> {
     let params = new HttpParams();
     
     if (status) params = params.set('status', status);
     if (page !== undefined) params = params.set('page', page.toString());
     if (size !== undefined) params = params.set('size', size.toString());
 
-    return this.http.get<Dispute[]>(`${this.apiUrl}/admin`, { params })
+    return this.http.get<PagedDisputes>(`${environment.transactionsAPIBaseUrl}/disputes`, { params })
       .pipe(
         catchError(this.handleError)
       );
@@ -131,15 +131,15 @@ export class DisputeService {
   /**
    * Update dispute status (admin only)
    */
-  // updateDisputeStatus(
-  //   disputeId: string, 
-  //   request: UpdateDisputeStatusRequest
-  // ): Observable<Dispute> {
-  //   return this.http.put<Dispute>(`${this.apiUrl}/${disputeId}/status`, request)
-  //     .pipe(
-  //       catchError(this.handleError)
-  //     );
-  // }
+  updateDisputeStatus(
+    disputeId: string, 
+    request: UpdateDisputeStatusRequest
+  ): Observable<Dispute> {
+    return this.http.put<Dispute>(`${environment.transactionsAPIBaseUrl}/disputes/${disputeId}/status`, request)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   /**
    * Assign dispute to admin (admin only)
