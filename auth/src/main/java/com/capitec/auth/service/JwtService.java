@@ -17,16 +17,10 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    /**
-     * Returns the signing key derived from the configured secret.
-     */
     public SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    /**
-     * Generates a JWT token for the given username and roles.
-     */
     public String generateToken(UUID userId, String username, Set<String> roles) {
         SecretKey key = getSecretKey();
         Map<String, Object> claims = new HashMap<>();
@@ -42,9 +36,7 @@ public class JwtService {
                 .compact();
     }
 
-    /**
-     * Extracts the username (subject) from the given JWT.
-     */
+
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
@@ -54,9 +46,6 @@ public class JwtService {
                 .getSubject();
     }
 
-    /**
-     * Extracts all claims for advanced use.
-     */
     public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
@@ -65,9 +54,6 @@ public class JwtService {
                 .getBody();
     }
 
-    /**
-     * Validates a token’s signature and expiration.
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()

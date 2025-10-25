@@ -37,39 +37,41 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7);
+
+
         String username;
+        if(jwtService.validateToken(jwt)) {
+            try {
+                username = jwtService.extractUsername(jwt);
+            } catch (ExpiredJwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token expired");
+                return;
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid token");
+                return;
+            }
 
-        try {
-            username = jwtService.extractUsername(jwt);
-        } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token expired");
-            return;
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token");
-            return;
-        }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            var claims = io.jsonwebtoken.Jwts.parserBuilder()
-                    .setSigningKey(jwtService.getSecretKey())
-                    .build()
-                    .parseClaimsJws(jwt)
-                    .getBody();
+                var claims = io.jsonwebtoken.Jwts.parserBuilder()
+                        .setSigningKey(jwtService.getSecretKey())
+                        .build()
+                        .parseClaimsJws(jwt)
+                        .getBody();
 
-            @SuppressWarnings("unchecked")
-            var roles = (List<String>) claims.get("roles");
+                @SuppressWarnings("unchecked")
+                var roles = (List<String>) claims.get("roles");
 
-            var authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                var authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-            var authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                var authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
         filterChain.doFilter(request, response);
